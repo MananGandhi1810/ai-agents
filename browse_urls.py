@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 @tool
 def get_url_data(url: str) -> str:
     """Returns data by scraping the url"""
+    print("Requesting URL: ", url)
     data = requests.get(url).content
     return data
 
@@ -50,7 +51,10 @@ agent = (
     | OpenAIToolsAgentOutputParser()
 )
 
-agent_executor = AgentExecutor(agent=agent, tools=tools)
+agent_executor = AgentExecutor(
+    agent=agent,
+    tools=tools,
+)
 
 chat_history = []
 while True:

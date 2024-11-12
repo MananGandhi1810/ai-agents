@@ -7,3 +7,4 @@ A collection of AI agents for various tasks.
 Currently, the following agents are available:
 
 -   URL Browsing Agent
+-   Website Browsing Agent

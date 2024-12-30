@@ -40,6 +40,8 @@ prompt = ChatPromptTemplate.from_messages(
             "system",
             """Answer the following questions as best you can. You have access to the following tools:
 YOU HAVE INTERNET ACCESS SO YOU CAN USE ANY TOOL THAT REQUIRES INTERNET ACCESS
+SEARCH GOOGLE IF YOU NEED ANY HELP
+
 {tools}
 
 Use the following format:

@@ -11,9 +11,14 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 @tool
 def get_url_data(url: str) -> str:
     """Returns data by scraping the url"""
-    url = url.strip()
+    url = url.strip().strip("'").strip('"')
     print(f"Requesting URL: {url}")
-    response = requests.get(url)
+    response = requests.get(
+        url,
+        headers={
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        },
+    )
     data = response.content
     return data
 

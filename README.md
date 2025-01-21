@@ -8,3 +8,4 @@ Currently, the following agents are available:
 
 -   URL Browsing Agent
 -   Website Browsing Agent
+-   Agent with Code Execution Capabilities

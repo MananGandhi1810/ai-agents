@@ -1,26 +1,33 @@
 import os
-import requests
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import tool
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain_core.messages import AIMessage, HumanMessage
 from dotenv import load_dotenv
+from selenium import webdriver
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+import time
+from markdownify import markdownify
+
+browser = webdriver.Chrome()
 
 
 @tool
 def get_url_data(url: str) -> str:
-    """Returns data by scraping the url"""
+    """Returns Markdown (from HTML source) of the requested URL by rendering Javascript in the browser"""
     url = url.strip().strip("'").strip('"')
-    print(f"Requesting URL: {url}")
-    response = requests.get(
-        url,
-        headers={
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-        },
-    )
-    data = response.content
-    return data
+    if "https://" not in url and "http://" not in url:
+        url = "https://" + url
+    print("Requesting URL:", url)
+    try:
+        browser.get(url)
+        time.sleep(1)
+        data = browser.page_source
+        markdown = markdownify(data).strip()
+        return markdown
+    except Exception as e:
+        print(e)
+        return e
 
 
 def format_log_to_messages(intermediate_steps):
@@ -46,6 +53,7 @@ prompt = ChatPromptTemplate.from_messages(
             """Answer the following questions as best you can. You have access to the following tools:
 YOU HAVE INTERNET ACCESS SO YOU CAN USE ANY TOOL THAT REQUIRES INTERNET ACCESS
 SEARCH GOOGLE IF YOU NEED ANY HELP
+Only query ONE URL at a time, call the tool multiple times if needed
 
 {tools}
 

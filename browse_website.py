@@ -9,7 +9,9 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 import time
 from markdownify import markdownify
 
-browser = webdriver.Chrome()
+options = webdriver.ChromeOptions()
+options.add_argument("--headless")
+browser = webdriver.Chrome(options=options)
 
 
 @tool
@@ -109,11 +111,13 @@ while True:
         }
     )
     print(result["output"])
+    intermediate_steps = str(result["intermediate_steps"])
+    output = result["output"]
     chat_history.extend(
         [
             HumanMessage(content=message),
             AIMessage(
-                content=f"Intermediate Steps:\n\n{str(result["intermediate_steps"])}\n\nOutput:\n\n{result["output"]}"
+                content=f"Intermediate Steps:\n\n{intermediate_steps}\n\nOutput:\n\n{output}"
             ),
         ]
     )
